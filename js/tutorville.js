@@ -8,27 +8,55 @@
       $tutorResults,
       $subjectSearch,
       $subjectSearchResults,
-      $subjectSearchBtn
+      $subjectSearchBtn,
+      $subjectSearchBtnResults,
+      $searchSubjects,
+      $foundSubjects,
+      $subSearchBtnResults
     
       init = function() {
         $tutorResults = $("#tutorResults");
         $subjectSearch = $("#subjectSearch");
         $subjectSearchResults = $("#subjectSearchResults");
         $subjectSearchBtn = $("#subjectSearchBtn");
- 
+        $subjectSearchBtnResults = $("#subjectSearchBtnResults");
+        $searchSubjects = $("#searchSubjects");
+        $foundSubjects = $("#foundSubjects");
+        $subSearchBtnResults = $("#subSearchBtnResults");
+
+        //$subjectSearchBtnResults.toggleClass('hide');
+        
         $subjectSearch.on("input", function(e) {
           searchSubjects(e.target.value);
+        });
+        
+        $subSearchBtnResults.on("click", function(e) {
+          searchResultSelected = false;
+          displaySubjectResults({results:[]});
+          $subjectSearch.val(null);
+          toggleHide([$searchSubjects, $foundSubjects, $subSearchBtnResults, $subjectSearch]);
+        });
+
+        $subjectSearchBtn.on("click", function(e) {
+          toggleHide([$subjectSearchBtn, $searchSubjects, $foundSubjects, $subSearchBtnResults, $subjectSearch]);
         });
 
         $subjectSearchResults.on("click", function(e) {
           $subjectSearch.val(subjects[$(e.target).html()]);
           displaySubjectResults({results:[]});
-          $subjectSearchBtn.toggleClass('hide');
+          toggleHide([$subjectSearchBtn]);
           searchResultSelected = true;
         });
 
         parseTemplates();
         displayInitialTutorResults();
+      },
+
+      toggleHide = function(elems) {
+        $.each(elems, function(index, value) {
+          value.toggleClass('hide');  
+        });
+
       },
 
       searchSubjects = function(srchStr) {
@@ -51,10 +79,7 @@
           }  
         }
 
-        if (results.length > 0) {
-          displaySubjectResults({results:results});
-        }
-
+        displaySubjectResults({results:results});
       },
         
       getTutorData = function() {
