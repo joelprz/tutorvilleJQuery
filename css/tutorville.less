@@ -74,18 +74,21 @@ header {
 #mainNav {
   height: 30px;
   background: #007fcc;
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 30px;
+    display: inline-block;
+    padding: 0 3%;
+  }
+
+  .fa {
+    font-size: 1.3em;
+  }
 }
-#mainNav a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 13px;
-  line-height: 30px;
-  display: inline-block;
-  padding: 0 3%;
-}
-#mainNav .fa {
-  font-size: 1.3em;
-}
+
 
 #bodyContent {
   background: #fff;
@@ -114,9 +117,10 @@ header {
   background: #eee;
   padding: 10px;
   font-size: 11px;
-}
-.box-gray a {
-  color: #000;
+
+  a {
+    color: #000;
+  }
 }
 
 .starRating {
@@ -125,10 +129,13 @@ header {
   font-size: 13px;
   display: inline-block;
   white-space: nowrap;
+
+  .fa {
+    margin-right: 2px;
+  }
+
 }
-.starRating .fa {
-  margin-right: 2px;
-}
+
 .starsFull {
   position: absolute;
   top: 0;
@@ -161,4 +168,46 @@ header {
   .active {
     background-color: #009afa;
   }
+}
+
+.inline {
+  display: inline;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.unselectable {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+}
+
+.subjectSearchResultsText {
+  .unselectable;
+  div {
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+    margin-bottom: 5px;
+  }
+}
+
+.removeBtn {
+  margin: 0;
+  border: 1px solid #ccc;
+  border-radius: 22px;
+  color: #999;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  font-weight: bold;
+
 }

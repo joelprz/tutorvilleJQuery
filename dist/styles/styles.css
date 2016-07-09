@@ -148,3 +148,47 @@ header {
 .navigation .active {
   background-color: #009afa;
 }
+.inline {
+  display: inline;
+}
+.inline-block {
+  display: inline-block;
+}
+.unselectable {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+  -ms-user-select: none;
+  user-select: none;
+}
+.subjectSearchResultsText {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+  -ms-user-select: none;
+  user-select: none;
+}
+.subjectSearchResultsText div {
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  margin-bottom: 5px;
+}
+.removeBtn {
+  margin: 0;
+  border: 1px solid #ccc;
+  border-radius: 22px;
+  color: #999;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  font-weight: bold;
+}
