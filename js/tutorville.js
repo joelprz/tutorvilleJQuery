@@ -5,6 +5,7 @@
       subjectsTemplate,
       tutorDataPromise,
       searchResultSelected = false,
+      selectedSubject,
       $tutorResults,
       $subjectSearch,
       $subjectSearchResults,
@@ -12,7 +13,8 @@
       $subjectSearchBtnResults,
       $searchSubjects,
       $foundSubjects,
-      $subSearchBtnResults
+      $subSearchBtnResults,
+      $subjectSearchDisplay
     
       init = function() {
         $tutorResults = $("#tutorResults");
@@ -23,8 +25,7 @@
         $searchSubjects = $("#searchSubjects");
         $foundSubjects = $("#foundSubjects");
         $subSearchBtnResults = $("#subSearchBtnResults");
-
-        //$subjectSearchBtnResults.toggleClass('hide');
+        $subjectSearchDisplay = $("#subjectSearchDisplay");
         
         $subjectSearch.on("input", function(e) {
           searchSubjects(e.target.value);
@@ -35,14 +36,21 @@
           displaySubjectResults({results:[]});
           $subjectSearch.val(null);
           toggleHide([$searchSubjects, $foundSubjects, $subSearchBtnResults, $subjectSearch]);
+          displayTutorResults(tutorData);
         });
 
         $subjectSearchBtn.on("click", function(e) {
+          var data = $.extend({}, tutorData);
+          
+          displayTutorResults(dataParsers.tutorsForSubject(data, selectedSubject));
+          $subjectSearchDisplay.html(selectedSubject);
           toggleHide([$subjectSearchBtn, $searchSubjects, $foundSubjects, $subSearchBtnResults, $subjectSearch]);
         });
 
         $subjectSearchResults.on("click", function(e) {
-          $subjectSearch.val(subjects[$(e.target).html()]);
+          var subjectName = subjects[$(e.target).html()];
+          selectedSubject = subjectName;
+          $subjectSearch.val(subjectName);
           displaySubjectResults({results:[]});
           toggleHide([$subjectSearchBtn]);
           searchResultSelected = true;
@@ -116,7 +124,7 @@
         displayTutorResults(tutorData);
       },
         
-      displayTutorResults = function(d){
+      displayTutorResults = function(d) {
         d.SeachCount = d.SearchResults.length;
         d.TutorCountIsNotOne = d.SearchResults.length !== 1;
         $tutorResults.html(Mustache.render(tutorTemplate, d));
@@ -136,6 +144,22 @@
 
           return data;
         },
+        
+        tutorsForSubject: function(data, subject) {
+          var length = data.SearchResults.length;
+          var tutors = [];
+          
+          for (var i=0; i < length; i++) {
+            if ( $.inArray(subject, data.SearchResults[i].Subjects) !== -1 ) {
+              tutors.push(data.SearchResults[i]);
+            }
+          }
+
+          data.SearchResults = tutors;
+
+          return data;
+        },
+
         subjects: function(data) {
           var length = data.SearchResults.length,
               subjectLookup = {};
