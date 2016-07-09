@@ -1,15 +1,15 @@
 (function() {
   var tutorData,
       subjects,
-	    tutorTemplate,
+      tutorTemplate,
       subjectsTemplate,
-		  tutorDataPromise,
+      tutorDataPromise,
       searchResultSelected = false,
-		  $tutorResults,
+      $tutorResults,
       $subjectSearch,
       $subjectSearchResults,
       $subjectSearchBtn
-		
+    
       init = function() {
         $tutorResults = $("#tutorResults");
         $subjectSearch = $("#subjectSearch");
@@ -56,7 +56,7 @@
         }
 
       },
-    		
+        
       getTutorData = function() {
         $.ajax({
           url: "data/tutorResults.json",
@@ -72,7 +72,7 @@
 
         });
       },
-		
+    
       parseTemplates = function() {
         tutorTemplate = $("#tutorTemplate").html();
         subjectsTemplate = $("#subjectsTemplate").html();
@@ -80,7 +80,7 @@
         Mustache.parse(tutorTemplate);
         Mustache.parse(subjectsTemplate);
       },
-    		
+        
       displayInitialTutorResults = function() {
 
         if (typeof tutorData === "undefined") {
@@ -90,7 +90,7 @@
 
         displayTutorResults(tutorData);
       },
-    		
+        
       displayTutorResults = function(d){
         d.SeachCount = d.SearchResults.length;
         d.TutorCountIsNotOne = d.SearchResults.length !== 1;
@@ -100,7 +100,7 @@
       displaySubjectResults = function(data) {
         $subjectSearchResults.html(Mustache.render(subjectsTemplate, data));
       },
-    			
+          
       dataParsers = {
         tutor: function(data) {
           var length = data.SearchResults.length;
@@ -124,11 +124,11 @@
           return subjectLookup;
         }
       };
-	
+  
   getTutorData();
-	
-	$(function() {
-		init();
-	});
-	
+  
+  $(function() {
+    init();
+  });
+  
 })();
