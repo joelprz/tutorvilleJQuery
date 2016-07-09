@@ -9,6 +9,8 @@
       shouldFilterBySubject = false,
       shouldFilterByOnline = false,
       shouldFilterByRadius = false,
+      filteredData = {},
+      sortResultsBy,
       $tutorResults,
       $subjectSearch,
       $subjectSearchResults,
@@ -19,7 +21,8 @@
       $subSearchBtnResults,
       $subjectSearchDisplay,
       $isOnlineCheck,
-      $isInRadiusCheck
+      $isInRadiusCheck,
+      $selectRankPrice
     
       init = function() {
         $tutorResults = $("#tutorResults");
@@ -31,6 +34,7 @@
         $foundSubjects = $("#foundSubjects");
         $subSearchBtnResults = $("#subSearchBtnResults");
         $subjectSearchDisplay = $("#subjectSearchDisplay");
+        $selectRankPrice = $("#selectRankPrice");
 
         $isOnlineCheck = $("#isOnlineCheck");
         $isInRadiusCheck = $("#isInRadiusCheck");
@@ -47,10 +51,35 @@
           filterTutors();
         });
 
-
-
         $subjectSearch.on("input", function(e) {
           searchSubjects(e.target.value);
+        });
+
+        $selectRankPrice.on("change", function() {
+          switch ($selectRankPrice.val()) {
+            case "0":
+              sortResultsBy = null;
+              sortResults({});
+              break;
+            case "1": 
+              sortResultsBy = "sortHighRank";
+              sortResults({property: "Rank", highLow: "high"});
+              break;
+            case "2":
+              sortResultsBy = "sortLowRank";
+              sortResults({property: "Rank", highLow: "low"});
+              break;
+            case "3":
+              sortResultsBy = "sortHighPrice";
+              sortResults({property: "HourlyRate", highLow: "high"});
+              break;
+            case "4":
+              sortResultsBy = "sortLowPrice";
+              sortResults({property: "HourlyRate", highLow: "low"});
+              break;
+            default:
+              break;
+          }
         });
         
         $subSearchBtnResults.on("click", function(e) {
@@ -59,7 +88,7 @@
           $subjectSearch.val(null);
           toggleHide([$searchSubjects, $foundSubjects, $subSearchBtnResults, $subjectSearch]);
           shouldFilterBySubject = false;
-          filterTutors();=
+          filterTutors();
         });
 
         $subjectSearchBtn.on("click", function(e) {
@@ -91,6 +120,22 @@
 
       },
 
+      sortResults = function(options) {
+        var data;
+
+        if (options.property === "undefined") {
+          return;
+        }
+
+        if (shouldFilterBySubject || shouldFilterByOnline || shouldFilterByRadius) {
+          data = dataParsers.sortTutors(filteredData, options);
+          displayTutorResults(data);
+        } else {
+          data = dataParsers.sortTutors(tutorData, options);
+          displayTutorResults(data);
+        }
+      },
+
       filterTutors = function() {
         var data = $.extend({}, tutorData);
         
@@ -99,6 +144,8 @@
         data = shouldFilterByOnline ? dataParsers.tutorsOnline(data) : data;
         data = shouldFilterByRadius ? dataParsers.tutorsRadius(data) : data;
         
+        filteredData = data;
+
         displayTutorResults(data);
       },
 
@@ -227,6 +274,23 @@
           }
 
           data.SearchResults = tutors;
+
+          return data;
+        },
+
+        unsorted: function(data) {
+
+        },
+
+        sortTutors: function(data, options) {
+          if (options.property === "undefined") {
+            alert("undefined");
+          }
+
+          data.SearchResults.sort(function(a, b) {
+              return options.highLow === "low" ? parseFloat(a[options.property]) - parseFloat(b[options.property]) :
+                parseFloat(b[options.property]) - parseFloat(a[options.property]);
+          });
 
           return data;
         },
