@@ -6,6 +6,9 @@
       tutorDataPromise,
       searchResultSelected = false,
       selectedSubject,
+      shouldFilterBySubject = false,
+      shouldFilterByOnline = false,
+      shouldFilterByRadius = false,
       $tutorResults,
       $subjectSearch,
       $subjectSearchResults,
@@ -14,7 +17,9 @@
       $searchSubjects,
       $foundSubjects,
       $subSearchBtnResults,
-      $subjectSearchDisplay
+      $subjectSearchDisplay,
+      $isOnlineCheck,
+      $isInRadiusCheck
     
       init = function() {
         $tutorResults = $("#tutorResults");
@@ -26,7 +31,24 @@
         $foundSubjects = $("#foundSubjects");
         $subSearchBtnResults = $("#subSearchBtnResults");
         $subjectSearchDisplay = $("#subjectSearchDisplay");
+
+        $isOnlineCheck = $("#isOnlineCheck");
+        $isInRadiusCheck = $("#isInRadiusCheck");
         
+
+
+        $isOnlineCheck.on("change", function() {
+          shouldFilterByOnline = $(this).prop("checked");
+          filterTutors();
+        });
+
+        $isInRadiusCheck.on("change", function() {
+          shouldFilterByRadius = $(this).prop("checked");
+          filterTutors();
+        });
+
+
+
         $subjectSearch.on("input", function(e) {
           searchSubjects(e.target.value);
         });
@@ -36,13 +58,15 @@
           displaySubjectResults({results:[]});
           $subjectSearch.val(null);
           toggleHide([$searchSubjects, $foundSubjects, $subSearchBtnResults, $subjectSearch]);
-          displayTutorResults(tutorData);
+          shouldFilterBySubject = false;
+          filterTutors();=
         });
 
         $subjectSearchBtn.on("click", function(e) {
           var data = $.extend({}, tutorData);
           
-          displayTutorResults(dataParsers.tutorsForSubject(data, selectedSubject));
+          shouldFilterBySubject = true;
+          filterTutors();
           $subjectSearchDisplay.html(selectedSubject);
           toggleHide([$subjectSearchBtn, $searchSubjects, $foundSubjects, $subSearchBtnResults, $subjectSearch]);
         });
@@ -65,6 +89,23 @@
           value.toggleClass('hide');  
         });
 
+      },
+
+      filterTutors = function() {
+        var data = $.extend({}, tutorData);
+        
+        // This can be made more elegant
+        data = shouldFilterBySubject ? dataParsers.tutorsForSubject(data, selectedSubject) : data;
+        data = shouldFilterByOnline ? dataParsers.tutorsOnline(data) : data;
+        data = shouldFilterByRadius ? dataParsers.tutorsRadius(data) : data;
+        
+        displayTutorResults(data);
+      },
+
+      resetFilters = function() {
+        shouldFilterBySubject = true;
+        shouldFilterByOnline = true;
+        shouldFilterByRadius = true;
       },
 
       searchSubjects = function(srchStr) {
@@ -151,6 +192,36 @@
           
           for (var i=0; i < length; i++) {
             if ( $.inArray(subject, data.SearchResults[i].Subjects) !== -1 ) {
+              tutors.push(data.SearchResults[i]);
+            }
+          }
+
+          data.SearchResults = tutors;
+
+          return data;
+        },
+
+        tutorsOnline: function(data) {
+          var length = data.SearchResults.length;
+          var tutors = [];
+          
+          for (var i=0; i < length; i++) {
+            if (data.SearchResults[i].IsOnline) {
+              tutors.push(data.SearchResults[i]);
+            }
+          }
+
+          data.SearchResults = tutors;
+
+          return data;
+        },
+
+        tutorsRadius: function(data) {
+          var length = data.SearchResults.length;
+          var tutors = [];
+          
+          for (var i=0; i < length; i++) {
+            if (data.SearchResults[i].Distance <= 5) {
               tutors.push(data.SearchResults[i]);
             }
           }
