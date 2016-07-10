@@ -23,7 +23,8 @@
       $subjectSearchDisplay,
       $isOnlineCheck,
       $isInRadiusCheck,
-      $selectRankPrice
+      $selectRankPrice,
+      $resetFiltersBtn
     
       init = function() {
         $tutorResults = $("#tutorResults");
@@ -38,6 +39,7 @@
         $selectRankPrice = $("#selectRankPrice");
         $isOnlineCheck = $("#isOnlineCheck");
         $isInRadiusCheck = $("#isInRadiusCheck");
+        $resetFiltersBtn = $("#resetFiltersBtn");
 
          /* BEGIN SUBJECT_SEARCH */
 
@@ -59,7 +61,7 @@
         });
 
         // Applies filtering by clicking Search btn
-        $subjectSearchBtn.on("click", function(e) {
+        $subjectSearchBtn.on("click", function() {
           isFilteredBySubject = true;
           filterTutors();
           $subjectSearchDisplay.html(selectedSubject);
@@ -67,7 +69,7 @@
         });
 
         // Remove subject filter and reset
-        $subSearchBtnResults.on("click", function(e) {
+        $subSearchBtnResults.on("click", function() {
           isSearchResultSelected = false;
           displaySubjectResults({results:[]});
           $subjectSearch.val(null);
@@ -90,12 +92,14 @@
 
         $selectRankPrice.on("change", function() {
           var options = $selectRankPrice.val().split("-");
-          
+
           sortedBy = {highLow: options[0], property: options[1]};
           isTutorListSorted = true;
 
           sortResults(sortedBy);
         });
+
+        $resetFiltersBtn.on("click", resetFilters);
 
         parseTemplates();
         displayInitialTutorResults();
@@ -109,18 +113,18 @@
 
       sortResults = function(options) {
         var data = {};
-
+        
         if (isFilteredBySubject || isFilteredByOnline || isFilteredByRadius) {
           data = dataParsers.sortTutors(filteredData, options);
         } else {
-          data = dataParsers.sortTutors($.extend({}, tutorData), options);
+          data = dataParsers.sortTutors($.extend(true, {}, tutorData), options);
         }
-
+        
         displayTutorResults(data);
       },
 
       filterTutors = function() {
-        var data = $.extend({}, tutorData);
+        var data = $.extend(true, {}, tutorData);
         
         // This can be made more elegant
         data = isFilteredBySubject ? dataParsers.tutorsForSubject(data, selectedSubject) : data;
@@ -139,14 +143,23 @@
         isFilteredBySubject = false;
         isFilteredByOnline = false;
         isFilteredByRadius = false;
-
         isTutorListSorted = false;
+        isSearchResultSelected = false;
         sortedBy = {};
 
-        // reset sort menu and switch boolean
-        // redraw view with tutorData
+        $isOnlineCheck.prop("checked", false);
+        $isInRadiusCheck.prop("checked", false);
 
-        // MAKE SURE $selectRankPrice.on( is catching null value when reset
+        selectedSubject = null;
+        $subjectSearch.val(null);
+
+        sortedBy = {};
+        $selectRankPrice.val(0);
+
+        $(".reset-show").removeClass("hide");
+        $(".reset-hide").addClass("hide");
+
+        displayInitialTutorResults();
       },
 
       searchSubjects = function(srchStr) {
@@ -197,12 +210,11 @@
       },
         
       displayInitialTutorResults = function() {
-
         if (typeof tutorData === "undefined") {
           tutorDataPromise = displayInitialTutorResults;
           return;
         }
-
+        
         displayTutorResults(tutorData);
       },
         
