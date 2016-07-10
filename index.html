@@ -81,12 +81,16 @@
 
 			<div>
 				<select id="selectRankPrice">
-					<option value="0">Sort By...</option>
-					<option value="1">Highest rank</option>
-					<option value="2">Lowest rank</option>
-					<option value="3">Highest price</option>
-					<option value="4">Lowest price</option>
+					<option value="0" disabled selected>Sort By...</option>
+					<option value="high-Rank">Highest rank</option>
+					<option value="low-Rank">Lowest rank</option>
+					<option value="high-HourlyRate">Highest price</option>
+					<option value="low-HourlyRate">Lowest price</option>
 				</select>
+			</div>
+
+			<div class="resetFilters">
+				<button id="resetFiltersBtn">Reset</button>
 			</div>
 
 		</div>
@@ -109,7 +113,7 @@
 
 
 	<script id="tutorTemplate" type="x-tmpl-mustache">
-		<h2>{{SeachCount}} Tutor{{#TutorCountIsNotOne}}s{{/TutorCountIsNotOne}} Found</h2>
+		<h2>{{SeachCount}} <span class="subject-filter-text">{{SubjectFilter}}</span> Tutor{{#TutorCountIsNotOne}}s{{/TutorCountIsNotOne}} Found</h2>
 		<hr class="thick">
 		{{#SearchResults}}
 		<div class="tutorResult">
