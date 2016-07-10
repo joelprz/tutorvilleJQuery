@@ -48,7 +48,8 @@
         
         // User selects from subjects search results
         $subjectSearchResults.on("click", function(e) {
-          var subjectName = subjects[$(e.target).html()];
+
+          var subjectName = subjects[$(e.target).html().toLowerCase()];
           
           selectedSubject = subjectName;
           $subjectSearch.val(subjectName);
@@ -57,12 +58,12 @@
           isSearchResultSelected = true;
         });
 
-        // Applies filtering by subject
+        // Applies filtering by clicking Search btn
         $subjectSearchBtn.on("click", function(e) {
           isFilteredBySubject = true;
           filterTutors();
           $subjectSearchDisplay.html(selectedSubject);
-          toggleHide([$subjectSearchBtn, $searchSubjects, $foundSubjects, $subSearchBtnResults, $subjectSearch]);
+          toggleHide([$subjectSearchBtn, $searchSubjects, $foundSubjects, $subSearchBtnResults, $subjectSearch, $subjectSearchResults]);
         });
 
         // Remove subject filter and reset
@@ -70,7 +71,7 @@
           isSearchResultSelected = false;
           displaySubjectResults({results:[]});
           $subjectSearch.val(null);
-          toggleHide([$searchSubjects, $foundSubjects, $subSearchBtnResults, $subjectSearch]);
+          toggleHide([$searchSubjects, $foundSubjects, $subSearchBtnResults, $subjectSearch, $subjectSearchResults]);
           isFilteredBySubject = false;
           filterTutors();
         });
@@ -92,7 +93,7 @@
           
           sortedBy = {highLow: options[0], property: options[1]};
           isTutorListSorted = true;
-          
+
           sortResults(sortedBy);
         });
 
@@ -164,7 +165,7 @@
         
         for (key in subjects) {
           if (key.indexOf(subject) >= 0) {
-            results.push({name: key});
+            results.push({name: subjects[key]});
           }  
         }
 

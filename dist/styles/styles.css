@@ -145,6 +145,25 @@ header {
     margin-bottom: 0 !important;
   }
 }
+@media only screen and (max-width: 40.063em) {
+  .column-filters {
+    position: absolute;
+  }
+  #tutorResults {
+    top: 175px;
+  }
+  #subjectSearchResults {
+    position: relative;
+  }
+  .subject-list {
+    position: absolute;
+    width: 100%;
+    z-index: 99999;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+  }
+}
 .navigation .active {
   background-color: #009afa;
 }
@@ -192,9 +211,49 @@ header {
   text-align: center;
   font-weight: bold;
 }
-#subjectSearch {
-  margin-right: 5px;
+.filter-spacing {
+  margin-top: 8px;
+}
+.isOnline label,
+.isInRadius label {
+  color: #b27600;
+  font-size: 14px;
+  font-weight: 600;
+}
+#subjectSearch,
+#subjectSearchBtn {
+  width: 100%;
+}
+#subjectSearchBtn {
+  margin-top: 5px;
+}
+.search-borders {
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+#subjectSearchResults {
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 .subject-filter-text {
   font-style: italic;
+}
+.subject-list {
+  background-color: white;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.subject-list li {
+  color: black;
+  font-size: 13px;
+  padding-left: 5px;
+  height: 20px;
+  line-height: 20px;
+  cursor: pointer;
+}
+.subject-list li:hover {
+  background-color: #eee;
 }
